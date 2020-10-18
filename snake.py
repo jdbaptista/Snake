@@ -23,8 +23,8 @@ class Snake:
         i = self.length
         game_canvas.delete("Snake")
         while i >= 1:
-            game_canvas.create_rectangle(self.x[i - 1], self.y[i - 1], self.x[i - 1] + 21,
-                                         self.y[i - 1] + 21, fill="Green", width=0, tags="Snake")
+            game_canvas.create_rectangle(self.x[i - 1] - 1, self.y[i - 1] - 1, self.x[i - 1] + 20,
+                                         self.y[i - 1] + 20, fill="Green", width=0, tags="Snake")
             i -= 1
 
     def self_detection(self):
