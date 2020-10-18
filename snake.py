@@ -1,5 +1,5 @@
 import tkinter as tk
-import random as rand
+from random import randint
 
 class Snake:
     """ The main player """
@@ -96,8 +96,8 @@ class Food:
             del self
         else:
             while True:
-                self.x = rand.randint(0, 23) * 20
-                self.y = rand.randint(0, 23) * 20
+                self.x = randint(0, 23) * 20
+                self.y = randint(0, 23) * 20
                 searching_tally = 0
                 i = player.length
                 while i >= 1:
