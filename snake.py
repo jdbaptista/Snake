@@ -23,8 +23,8 @@ class Snake:
         i = self.length
         game_canvas.delete("Snake")
         while i >= 1:
-            game_canvas.create_rectangle(self.x[i - 1] - 1, self.y[i - 1] - 1, self.x[i - 1] + 20,
-                                         self.y[i - 1] + 20, fill="Green", width=0, tags="Snake")
+            game_canvas.create_rectangle(self.x[i - 1], self.y[i - 1], self.x[i - 1] + 21,
+                                         self.y[i - 1] + 21, fill="Green", width=0, tags="Snake")
             i -= 1
 
     def self_detection(self):
@@ -32,7 +32,7 @@ class Snake:
         i = 1
         while i < len(self.x):
             if self.x[0] == self.x[i] and self.y[0] == self.y[i]:
-                root.quit()
+                end()
             i += 1
 
     def movement_logic(self):
@@ -132,36 +132,16 @@ def key(event):
     elif event.keycode == 68 and player.direction != "left":  # key pressed is 'D'
         direction = "right"
 
-def Refresher():
-    """The main game loop, refreshing the canvas every 100 milliseconds"""
-    # should change this so that the frame rate and player movement speed are separate
-    if direction == "up" and player.y[0] <= 0:
-        root.quit()
-    elif direction == "down" and player.y[0] >= 460:
-        root.quit()
-    elif direction == "right" and player.x[0] >= 460:
-        root.quit()
-    elif direction == "left" and player.x[0] <= 0:
-        root.quit()
-    else:
-        player.direction = direction
-        player.update()
-        player.check_food()
-    root.after(100, Refresher)
+def Refresher_init():
+    global player
+    global food1
+    global food2
+    global food3
+    global food4
+    global food5
+    global direction
 
-if __name__ == "__main__":
-    # create the window
-    root = tk.Tk()
-    root.title("Snake")
-    # icon = tk.PhotoImage(file="snake_icon.gif")
-    # root.iconphoto(False, icon)
-    playing = True
     direction = "up"
-
-    # create the game canvas
-    game_canvas = tk.Canvas(root, width=480, height=480, bg="black")
-    game_canvas.pack()
-
     # create the player
     player = Snake()
 
@@ -175,5 +155,95 @@ if __name__ == "__main__":
     # establish game loop and key binds
     root.bind("<Key>", key)
     Refresher()
+
+def Refresher():
+    global player
+    global food1
+    global food2
+    global food3
+    global food4
+    global food5
+    """The main game loop, refreshing the canvas every 100 milliseconds"""
+    # should change this so that the frame rate and player movement speed are separate
+    if direction == "up" and player.y[0] <= 0:
+        end()
+    elif direction == "down" and player.y[0] >= 460:
+        end()
+    elif direction == "right" and player.x[0] >= 460:
+        end()
+    elif direction == "left" and player.x[0] <= 0:
+        end()
+    else:
+        player.direction = direction
+        player.update()
+        player.check_food()
+    root.after(100, Refresher)
+
+def menu_keys(event):
+    global choice
+    if event.keycode == 32:
+        choice = "game"
+
+
+def main_menu():
+    if choice == "game":
+        game_canvas.delete("all")
+        Refresher_init()
+    else:
+        root.after(100, main_menu)
+
+def end():
+    global player
+    global food1
+    global food2
+    global food3
+    global food4
+    global food5
+    global choice
+    global title
+    global game_canvas
+    global w_key
+    game_canvas.delete("all")
+
+    title = tk.PhotoImage(file="title.png")
+    game_canvas.create_image(240, 70, image=title)
+
+    w_key = tk.PhotoImage(file="play.png")
+    game_canvas.create_image(240, 170, image=w_key)
+
+    game_canvas.create_text(240, 240, fill="green", font="Times 20 italic bold", text="Score: " + str(player.length - 1))
+    choice = ""
+
+    del player
+    del food1
+    del food2
+    del food3
+    del food4
+    del food5
+
+    root.bind("<Key>", menu_keys)
+    main_menu()
+    
+
+if __name__ == "__main__":
+    # create the window
+    root = tk.Tk()
+    root.title("Snake")
+    # icon = tk.PhotoImage(file="snake_icon.gif")
+    # root.iconphoto(False, icon)
+    game_canvas = tk.Canvas(root, width=480, height=480, bg="black")
+    game_canvas.pack()
+
+    title = tk.PhotoImage(file="title.png")
+    game_canvas.create_image(240, 70, image=title)
+
+    w_key = tk.PhotoImage(file="play.png")
+    game_canvas.create_image(240, 170, image=w_key)
+
+    choice = ""
+    direction = "up"
+
+    root.bind("<Key>", menu_keys)
+    main_menu()
 
     root.mainloop()
